@@ -50,17 +50,15 @@ def main():
     args, default_devices = parse_args()
     total_lines = 0  # Keep track of total lines printed
 
-    # Jeśli użytkownik zażądał memtemp:
+    # if user requested memtemp:
     mem_temps = []
     if args.memtemp:
         if os.geteuid() != 0:
-            # print("Aby wyświetlić temperatury GDDR6, uruchom jako root.")
             print("You need to run as root to display GDDR6 temperatures.")
-            # sleep 3 seconds
             t.sleep(3)
-            # Nie przerywamy całego programu, po prostu nie pokażemy memtemp
+            # we don't break the whole program, we just won't show memtemp
         else:
-            # Importujemy memtemp i pobieramy dane
+            # import memtemp and get data
             try:
                 import memtemp
                 mem_temps = memtemp.get_mem_temps()
@@ -119,8 +117,7 @@ def main():
             # Print GDDR6 temperatures if memtemp is enabled
             if args.memtemp and mem_temps:
                 # Assume the order of GPUs detected in memtemp.get_mem_temps()
-                # corresponds to the order in lspci. It may not always be perfect,
-                # but this is an example.
+                # corresponds to the order in lspci. It may not always be perfect.
                 # Here we will display all found memtemp next to the GPU:
                 # In practice, it may be necessary to match by BDF.
                 color_print('yellow', f'  GDDR6: {mem_temps[device_id]} °C {display_icon(mem_temps[device_id], 100, "🔥")}' if device_id < len(mem_temps) and mem_temps[device_id] is not None else '  GDDR6 Temp: Not Available')
