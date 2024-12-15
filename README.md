@@ -69,6 +69,7 @@ Optionally, it can also display GDDR6 memory temperatures if run as `root` and w
 - Running as root is required to access and map GPU memory addresses for reading GDDR6 temperatures.
 - Ensure that `iomem=relaxed` is enabled if the script fails to map memory.
 - The GDDR6 temperature matching to a specific GPU is based on assumptions and may require matching by PCI BDF in a more complex environment. For most setups, it should display correct temperatures if compatible GPUs are detected.
+![image](https://github.com/user-attachments/assets/39b22f2e-eb05-463f-92dc-a75f162f3781)
 
 ## License
 
