@@ -29,7 +29,8 @@ class Device:
         self.phys_addr = 0
         self.base_offset = 0
 
-# Tabela z wcześniejszego przykładu
+# Table of devices with their offsets, IDs, VRAM types, architectures, and names, 
+# source github.com/olealgoritme/gddr6
 dev_table = [
     Device(offset=0x0000E2A8, dev_id=0x2684, vram="GDDR6X", arch="AD102", name="RTX 4090"),
     Device(offset=0x0000E2A8, dev_id=0x2702, vram="GDDR6X", arch="AD103", name="RTX 4080 Super"),
@@ -109,7 +110,7 @@ def detect_compatible_gpus():
                             d = int(dev_hex,16)
                             f = int(func_hex,16)
 
-                            # Pobranie BAR0
+                            # get BAR0
                             try:
                                 detail = subprocess.check_output(["lspci","-v","-s", bdf], universal_newlines=True)
                             except:
@@ -144,9 +145,9 @@ def memory_map():
             d.mapped_addr = None
 
 def get_mem_temps():
-    # Zwraca listę temperatur GDDR6 dla wykrytych urządzeń
+    # returns list of GDDR6 temps for detected devices
     if not init():
-        # Nie można otworzyć /dev/mem
+        # cannot open /dev/mem
         return []
     n = detect_compatible_gpus()
     if n == 0:
@@ -169,12 +170,12 @@ def get_mem_temps():
     return temps
 
 if __name__ == "__main__":
-    # Jeśli uruchamiane bezpośrednio, wypisz wykryte temperatury
+    # if run directly, print detected temps
     if os.geteuid() != 0:
-        print("Uruchom jako root, aby zobaczyć temperatury GDDR6.")
+        print("Run as root to see GDDR6 temps.")
         sys.exit(1)
     temps = get_mem_temps()
     if temps:
         print("VRAM Temps:", temps)
     else:
-        print("Brak kompatybilnych urządzeń lub brak dostępu.")
+        print("No compatible devices or access denied.")
