@@ -10,7 +10,7 @@ import time as t
 from pynvml import *
 import os
 import sys
-
+import memtemp
 def parse_args():
     nvmlInit()
     default_devices = list(range(nvmlDeviceGetCount()))
@@ -46,6 +46,14 @@ def display_icon(value, threshold, icon="⚠️"):
     """Return an icon based on value threshold."""
     return icon if value >= threshold else "✅"
 
+def read_memtemp():
+    if os.geteuid() == 0:
+        try:
+            return memtemp.get_mem_temps()
+        except Exception as e:
+            print(f"Failed to get GDDR6 temperatures: {e}")            
+    return []
+
 def main():
     args, default_devices = parse_args()
     total_lines = 0  # Keep track of total lines printed
@@ -57,14 +65,6 @@ def main():
             print("You need to run as root to display GDDR6 temperatures.")
             t.sleep(3)
             # we don't break the whole program, we just won't show memtemp
-        else:
-            # import memtemp and get data
-            try:
-                import memtemp
-                mem_temps = memtemp.get_mem_temps()
-            except Exception as e:
-                print(f"Failed to get GDDR6 temperatures: {e}")
-                mem_temps = []
 
     # Clear terminal on start
     clear_terminal()
@@ -83,7 +83,7 @@ def main():
             move_cursor_up(total_lines)
 
         lines_printed = 0  # Reset lines printed for this iteration
-
+        mem_temps = read_memtemp()
         display_separator('=')
         color_print('blue', 'NVIDIA GPU Monitoring Tool', bold=True)
         display_separator('=')
