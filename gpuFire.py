@@ -70,6 +70,9 @@ def main():
     clear_terminal()
 
     while True:
+        # read memtemp 
+        mem_temps = read_memtemp()
+
         # Clear terminal every 10 seconds
         if int(t.time()) % 10 == 0:
             clear_terminal()
@@ -82,8 +85,7 @@ def main():
         if total_lines > 0:
             move_cursor_up(total_lines)
 
-        lines_printed = 0  # Reset lines printed for this iteration
-        mem_temps = read_memtemp()
+        lines_printed = 0  # Reset lines printed for this iteration        
         display_separator('=')
         color_print('blue', 'NVIDIA GPU Monitoring Tool', bold=True)
         display_separator('=')
